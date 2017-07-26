@@ -1,0 +1,21 @@
+            $http({
+                method: "POST",
+                url: "/WebService.asmx/PostDataResponse",
+                data: dataJson,
+                ContentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data, status, headers, config) {
+                    $scope.ServerResponse = data;
+                    $log.info($scope.ServerResponse);
+                    $log.info(data);
+                    alert(data);
+
+                },
+                error: function (data, status, header, config) {
+                    $scope.PostDataResponse = "Data: " + data +
+                        "<hr />status: " + status +
+                        "<hr />headers: " + header +
+                        "<hr />config: " + config;
+                    alert("erorr");
+                }
+            });
