@@ -1,21 +1,63 @@
-            $http({
-                method: "POST",
-                url: "/WebService.asmx/PostDataResponse",
-                data: dataJson,
-                ContentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (data, status, headers, config) {
-                    $scope.ServerResponse = data;
-                    $log.info($scope.ServerResponse);
-                    $log.info(data);
-                    alert(data);
+d<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default2.aspx.cs" Inherits="Default2" %>
 
-                },
-                error: function (data, status, header, config) {
-                    $scope.PostDataResponse = "Data: " + data +
-                        "<hr />status: " + status +
-                        "<hr />headers: " + header +
-                        "<hr />config: " + config;
-                    alert("erorr");
-                }
-            });
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="js/packages/angular.min.js"></script>
+    <script src="js/packages/jquery-3.1.0.min.js"></script>
+
+     <script>
+         var myApp = angular.module("myApp1", []);
+         myApp.controller("HttpPostController", function ($scope, $http, $log) {
+
+             $scope.SendHttpPostData = function () {
+
+                 var dataJson = $.param({
+                     firstName: $scope.firstName,
+                     lastName: $scope.lastName,
+                     age: $scope.age
+                 });
+
+                 $http({
+                     method: "POST",
+                     url: "/WebService.asmx/PostDataResponse",
+                     data: dataJson,
+                     ContentType: "application/json;charset=utf-8",
+                     dataType: "json",
+                     success: function (data, status, headers, config) {
+                         $scope.ServerResponse = data;
+                         $log.info($scope.ServerResponse);
+                         $log.info(data);
+                         alert(data);
+                     },
+                     error: function (data, status, header, config) {
+                         $scope.PostDataResponse = "Data: " + data +
+                             "<hr />status: " + status +
+                             "<hr />headers: " + header +
+                             "<hr />config: " + config;
+                         alert("erorr");
+                     }
+                 });
+             }
+         });
+         
+             
+        
+</script>
+    </head>
+<body ng-app="myApp1" ng-controller="HttpPostController">
+    <div runat="server">
+       
+    <form runat="server" ng-submit="SendHttpPostData()">
+        <p>First Name: <input type="text" name="firstName" ng-model="firstName" required /></p>
+        <p>Last Name: <input type="text" name="lastName" ng-model="lastName" required /></p>
+        <p>Age : <input type="number" name="age" ng-model="age" required /></p>
+        <button runat="server" ng-click="SendHttpPostData1()">Reset</button></div>
+        <hr />
+         {{ ServerResponse }}
+    </form>
+       
+</div>
+</body>
