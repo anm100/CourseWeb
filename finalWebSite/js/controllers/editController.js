@@ -26,17 +26,17 @@ angular.module('myAPP', [])
         //$scope.Users = $rootScope.Users
         //$log.info($rootScope.Users);
         // $scope.UseresBack = angular.copy($scope.Users);
-        $log.info($scope.Users);
-        $log.info($rootScope.Users);
+        $log.info($scope.students);
+        $log.info($rootScope.students);
         $scope.save = function () {
-            $scope.UseresBack = angular.copy($scope.Users);
-            $log.info($scope.Users);
+            $scope.UseresBack = angular.copy($scope.students);
+            $log.info($scope.students);
             $("tbody td").css("color", "black");
             var post = $http({
                 method: "POST",
                 url: "/WebService.asmx/PostDataResponse",
                 dataType: 'json',
-                data: { users: $scope.Users },
+                data: JSON.stringify({ name: JSON.stringify( $scope.students)}),
                 headers: { "Content-Type": "application/json" }
             });
 
@@ -49,11 +49,11 @@ angular.module('myAPP', [])
             });
         }
         $scope.reset = function () {
-            $scope.Users = angular.copy($scope.UseresBack);
+            $scope.students = angular.copy($scope.UseresBack);
             $("tbody td").css("color", "black");
         }
 
-        $scope.$watch('Users', function (newVal, oldVal) {
+        $scope.$watch('students', function (newVal, oldVal) {
             $(event.target).parent().css("color", "red");
         }, true);
     })

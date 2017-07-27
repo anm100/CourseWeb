@@ -122,31 +122,45 @@ public class WebService : System.Web.Services.WebService
     }
     [WebMethod]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-    public string[][] PostDataResponse()
+    public Boolean PostDataResponse(string name)
     {
-        // string[][] fields=null;
-        // // const string KEY = "key";
-        // // goto beginning of the inputstream
-        // HttpContext.Current.Request.InputStream.Position = 0;
-        // // convert postdata to dictionary
-        // string postData = new System.IO.StreamReader(HttpContext.Current.Request.InputStream).ReadToEnd();
-        // //dynamic obj = postData == "" ? null : JObject.Parse(postData);
+        JObject data = JObject.Parse(name);
+        JArray array = (JArray)data["json"];
+        int CourseID = 1;
+        string AssignmentName = "hmw1";
 
-        // string[] content = postData.Split('&');
-        // for (int i = 0; i < content.Length; i++)
-        // {
-        //      fields[i] = content[i].Split('=');
-        // }
-        //// var json = JsonSerializer.SerializeToString(fields);
-        // return fields;
 
-        Stream req = HttpContext.Current.Request.InputStream;
-        req.Seek(0, System.IO.SeekOrigin.Begin);
-        string json = new StreamReader(req).ReadToEnd();
+        using (var context = new courseExampleEntities())
+        {
+            // creates a Command 
+            dynamic studets = (JArray)data["json"];
+            var cmd = context.Database.Connection.CreateCommand();
 
-        JavaScriptSerializer serializer = new JavaScriptSerializer();
-        dynamic items = serializer.Deserialize<object>(json);
-        return null;
+            try
+            {
+                context.Database.Connection.Open();
+                for (int i = 0;  i< ((JArray)data["json"]).Count; i++)
+                {
+                    dynamic s = studets[i];
+                    string grade = (string)s.grade;
+
+                    cmd.CommandText = "UPDATE Grades SET  Grade =" + Convert.ToInt32(grade)
+                        + "WHERE  StudentID =" + s.Id
+                        + " AND CourseID =" + CourseID
+                        + " AND  AssignmentName= '" + AssignmentName+"';";
+                    cmd.ExecuteNonQuery();
+
+                }
+                // loop through all resultsets (considering that it's possible to have more than one)
+            }
+            finally
+            {
+                context.Database.Connection.Close();
+
+
+            }
+            return true;
+        }
     }
 
     [WebMethod]

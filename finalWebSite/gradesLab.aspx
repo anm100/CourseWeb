@@ -26,10 +26,10 @@
                             </a>
                         </td>
                         <td>
-                            <a runat="server" href="#" ng-click="sortType = 'role'; sortReverse = !sortReverse">
+                            <a runat="server" href="#" ng-click="sortType = 'grade'; sortReverse = !sortReverse">
                                grade
-                                <span runat="server" ng-show="sortType == 'role' && !sortReverse" class="fa fa-caret-down"></span>
-                                <span runat="server" ng-show="sortType == 'role' && sortReverse" class="fa fa-caret-up"></span>
+                                <span runat="server" ng-show="sortType == 'grade' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span runat="server" ng-show="sortType == 'grade' && sortReverse" class="fa fa-caret-up"></span>
                             </a>
                         </td>
                     </tr>
@@ -37,15 +37,15 @@
                 <tbody>
                     <tr runat="server" ng-repeat="roll in students.json | orderBy:sortType:sortReverse | filter: searchFish">
                         <td>
-                            <span onclick="EditMode(this,1)">{{roll.Id}}</span>
-                            <input runat="server" ng-model="roll.UserId" type="number"
+                            <span>{{roll.Id}}</span>
+                            <input runat="server" ng-model="roll.Id" type="number"
                                    style="display:none" onblur="EditMode(this, 0)" />
                         </td>
                         <td>
                             <span onclick="EditMode(this,1)">{{roll.grade}}</span>
-                            <input runat="server" ng-model="roll.Role" type="text"
+                            <input runat="server" ng-model="roll.grade" type="number"
                                    onchange="$(this).parent().css('color','red')"
-                                   style="display:none" onblur="EditMode(this, 0)" />
+                                   style="display:none" onblur="EditMode(this, 1)" />
                         </td>
                        
                     </tr>
