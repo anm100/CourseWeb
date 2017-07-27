@@ -74,6 +74,53 @@ public class WebService : System.Web.Services.WebService
         }
     }
     [WebMethod]
+    public void GetAssigmnetUsersCourse()
+    {
+        List<User> listUsers = new List<User>();
+        using (var context = new courseExampleEntities())
+        {
+            // creates a Command 
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "SELECT  [StudentID],[Grade] FROM [courseExample].[dbo].[Grades] WHERE CourseID=1 AND AssignmentName='hmw1';";
+            try
+            {
+                context.Database.Connection.Open();
+                var reader = cmd.ExecuteReader();
+                // loop through all resultsets (considering that it's possible to have more than one)
+                JArray array = new JArray();
+                while (reader.Read())
+                {
+                    // loads the DataTable (schema will be fetch automatically)
+           
+                    JObject data = new JObject();
+                    data["Id"]= Convert.ToInt32(reader["StudentID"]);
+                    data["grade"]= (reader["Grade"]).ToString();
+                    array.Add(data);
+                }
+                JObject o = new JObject();
+                o["json"] = array;
+                string json = o.ToString();
+                // {
+                //   "MyArray": [
+                //     "Manual text",
+                //     "2000-05-23T00:00:00"
+                //   ]
+                // }
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                Context.Response.Clear();
+                Context.Response.ContentType = "application/json";
+                Context.Response.Write(js.Serialize(json));
+            }
+            finally
+            {
+                
+            
+    
+                context.Database.Connection.Close();
+            }
+        }
+    }
+    [WebMethod]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public string[][] PostDataResponse()
     {
