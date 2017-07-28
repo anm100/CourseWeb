@@ -74,93 +74,32 @@ public class WebService : System.Web.Services.WebService
         }
     }
     [WebMethod]
-    public void GetAssigmnetUsersCourse()
-    {
-        List<User> listUsers = new List<User>();
-        using (var context = new courseExampleEntities())
-        {
-            // creates a Command 
-            var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = "SELECT  [StudentID],[Grade] FROM [courseExample].[dbo].[Grades] WHERE CourseID=1 AND AssignmentName='hmw1';";
-            try
-            {
-                context.Database.Connection.Open();
-                var reader = cmd.ExecuteReader();
-                // loop through all resultsets (considering that it's possible to have more than one)
-                JArray array = new JArray();
-                while (reader.Read())
-                {
-                    // loads the DataTable (schema will be fetch automatically)
-           
-                    JObject data = new JObject();
-                    data["Id"]= Convert.ToInt32(reader["StudentID"]);
-                    data["grade"]= (reader["Grade"]).ToString();
-                    array.Add(data);
-                }
-                JObject o = new JObject();
-                o["json"] = array;
-                string json = o.ToString();
-                // {
-                //   "MyArray": [
-                //     "Manual text",
-                //     "2000-05-23T00:00:00"
-                //   ]
-                // }
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                Context.Response.Clear();
-                Context.Response.ContentType = "application/json";
-                Context.Response.Write(js.Serialize(json));
-            }
-            finally
-            {
-                
-            
-    
-                context.Database.Connection.Close();
-            }
-        }
-    }
-    [WebMethod]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-    public Boolean PostDataResponse(string name)
+    public string[][] PostDataResponse()
     {
-        JObject data = JObject.Parse(name);
-        JArray array = (JArray)data["json"];
-        int CourseID = 1;
-        string AssignmentName = "hmw1";
+        // string[][] fields=null;
+        // // const string KEY = "key";
+        // // goto beginning of the inputstream
+        // HttpContext.Current.Request.InputStream.Position = 0;
+        // // convert postdata to dictionary
+        // string postData = new System.IO.StreamReader(HttpContext.Current.Request.InputStream).ReadToEnd();
+        // //dynamic obj = postData == "" ? null : JObject.Parse(postData);
 
+        // string[] content = postData.Split('&');
+        // for (int i = 0; i < content.Length; i++)
+        // {
+        //      fields[i] = content[i].Split('=');
+        // }
+        //// var json = JsonSerializer.SerializeToString(fields);
+        // return fields;
 
-        using (var context = new courseExampleEntities())
-        {
-            // creates a Command 
-            dynamic studets = (JArray)data["json"];
-            var cmd = context.Database.Connection.CreateCommand();
+        Stream req = HttpContext.Current.Request.InputStream;
+        req.Seek(0, System.IO.SeekOrigin.Begin);
+        string json = new StreamReader(req).ReadToEnd();
 
-            try
-            {
-                context.Database.Connection.Open();
-                for (int i = 0;  i< ((JArray)data["json"]).Count; i++)
-                {
-                    dynamic s = studets[i];
-                    string grade = (string)s.grade;
-
-                    cmd.CommandText = "UPDATE Grades SET  Grade =" + Convert.ToInt32(grade)
-                        + "WHERE  StudentID =" + s.Id
-                        + " AND CourseID =" + CourseID
-                        + " AND  AssignmentName= '" + AssignmentName+"';";
-                    cmd.ExecuteNonQuery();
-
-                }
-                // loop through all resultsets (considering that it's possible to have more than one)
-            }
-            finally
-            {
-                context.Database.Connection.Close();
-
-
-            }
-            return true;
-        }
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+        dynamic items = serializer.Deserialize<object>(json);
+        return null;
     }
 
     [WebMethod]
