@@ -1,0 +1,110 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+          <script src="js/packages/angular.min.js"></script>
+     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+    <script src="js/packages/angular-sanitize.min.js"></script>
+
+    <script src="packages/loading-bar.js"></script>
+    <link href='css/loading-bar.css' rel='stylesheet' />
+
+    <script src="js/packages/jquery-3.1.0.min.js"></script>
+    <script src="js/packages/bootstrap.min.js"></script>
+    <script src="js/packages/linq.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.3/angular-route.min.js"></script>
+    <script src="js/controllers/myapp.js"></script>
+  <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/myjs.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/Custom-Cs.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+</head>
+<body ng-app="myAPP" style="background-color:dimgray;">
+    <div>
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="Default.aspx"><span>
+                            <img alt="Logo" src="images/logo.png" height="40px" /></span>Courses site</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="active"><a href="Default.aspx">Home</a></li>
+                            <li><a href="#">My Courses</a></li>
+                            <li><a href="#">teachers</a></li>
+                              <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">manage<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="Regist.aspx">Add new User</a></li>
+                                    <li><a href="#">Edit User</a></li>
+                                    <li><a href="#">Delete User</a></li>
+                                </ul>
+                            </li>
+                            <li id="btnSignin" runat="server"><a href="SignIn.aspx">Sign In</a></li>
+                            <li>
+                                <button type="button" ID="BtAdminLogout"  Class="btn btn-default navbar-btn" Text="Logout" OnClick="BtAdminLogout_Click()" />
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Navbar End -->
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+      </div>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <div style="margin:0 auto;width:80%;height:100%;background-color:#ffffff;">
+            {{1+1}}
+             <div ng-view></div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+            </div>
+        <footer>
+        <div style="background-color:black;height:30px;">
+            <p class="pull-right"><a href="#">Back to top</a></p>
+            <p>&copy; 2015 TechCybo.com &middot; <a href="Default.aspx">Home</a> &middot; <a href="#">About</a> &middot; <a href="#">Contact</a> &middot; <a href="#">Products</a></p>
+        </div>
+    </footer>
+
+    <!--- Footer -->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugin) -->
+</body>
+</html>
