@@ -127,7 +127,7 @@ public class WebService : System.Web.Services.WebService
             User user = (User)Session["user"];
             // creates a Command 
             var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = "SELECT  [StudentID],[Grade] FROM [courseExample].[dbo].[Grades] WHERE CourseID=1 AND AssignmentName='hmw1';";
+            cmd.CommandText = "SELECT  DISTINCT [CourseID],[year],[semester] FROM [courseExample].[dbo].[assignment]  WHERE teacherId="+ user.UserId;
             try
             {
                 context.Database.Connection.Open();
@@ -137,10 +137,11 @@ public class WebService : System.Web.Services.WebService
                 while (reader.Read())
                 {
                     // loads the DataTable (schema will be fetch automatically)
-                    User userSession = (User)Session["user"];
                     JObject data = new JObject();
-                    data["Id"] = Convert.ToInt32(reader["StudentID"]);
-                    data["grade"] = (reader["Grade"]).ToString();
+                    data["Id"] = Convert.ToInt32(reader["CourseID"]);
+                    data["year"] = (reader["year"]).ToString();
+                    data["semester"] = (reader["semester"]).ToString();
+
                     array.Add(data);
                 }
                 JObject o = new JObject();

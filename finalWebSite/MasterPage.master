@@ -31,7 +31,9 @@
 </head>
 <body ng-app="myAPP" style="background-color:dimgray;">
     <div>
-            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -47,12 +49,9 @@
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="active"><a href="Default.aspx">Home</a></li>
-                            <li><a href=" #/Courses">My Courses</a></li>
-                             <li><a href=" #/grades">grades</a></li>
-
+                            <li><a href="#">My Courses</a></li>
                             <li><a href="#">teachers</a></li>
                               <li class="dropdown">
-                                 
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">manage<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li role="separator" class="divider"></li>
@@ -61,6 +60,7 @@
                                     <li><a href="#">Delete User</a></li>
                                 </ul>
                             </li>
+                            <li id="btnSignin" runat="server"><a href="SignIn.aspx">Sign In</a></li>
                             <li>
                                 <button type="button" ID="BtAdminLogout"  Class="btn btn-default navbar-btn" Text="Logout" OnClick="BtAdminLogout_Click()" />
                             </li>
@@ -70,6 +70,25 @@
                 </div>
             </div>
             <!-- Navbar End -->
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+      </div>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
         <div style="margin:0 auto;width:80%;height:100%;background-color:#ffffff;">
             {{1+1}}
              <div ng-view></div>

@@ -2,7 +2,7 @@ var app = angular.module('myAPP', ['ngRoute']);
 
     app.config(function ($routeProvider) {
 
-
+      
         $routeProvider
             .when('/', {
                 templateUrl: 'mycourses.aspx'
@@ -10,6 +10,9 @@ var app = angular.module('myAPP', ['ngRoute']);
             .when('/Courses', {
                 templateUrl: 'mycourses.aspx',
                 controller  : 'courseController'
+            }).when('/Assignment', {
+                templateUrl: 'showAssignment.aspx',
+                controller: 'AssignmentController'
             }).when('/grades', {
                 templateUrl: 'gradesLab.aspx'
             });
@@ -24,13 +27,12 @@ var app = angular.module('myAPP', ['ngRoute']);
             .then(function (data) {
                 var response = angular.fromJson(data);
                 $rootScope.courses = JSON.parse(response.data);
+                alert(response.data);
                 })
         })
-    .controller('cfgController', function ($scope) {
-
-        $scope.message = "Hello world";
-
-    })
+        .controller('AssignmentController', function ($scope, $location, $http, $log, $rootScope) {
+            alert($location.search().id);
+        })
    .controller('MyController', function ($scope, $http, $log, $rootScope) {
      
         $http({
