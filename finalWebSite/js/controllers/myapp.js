@@ -1,16 +1,42 @@
-angular.module('myAPP', [])
+var app = angular.module('myAPP', ['ngRoute']);
 
-    //.controller('MyController', [function () {
-    //    angular.element(document).ready(function () {
-    //        alert("ready");
-    //    });
-    //}])
-    .controller('MyController', function ($scope, $http, $log, $rootScope) {
+    app.config(function ($routeProvider) {
+
+
+        $routeProvider
+            .when('/', {
+                templateUrl: 'mycourses.aspx'
+            })
+            .when('/Courses', {
+                templateUrl: 'mycourses.aspx',
+                controller  : 'courseController'
+            }).when('/grades', {
+                templateUrl: 'gradesLab.aspx'
+            });
+
+
+    }).controller('courseController', function ($scope, $http, $log, $rootScope) {
+
+        $http({
+            method: 'GET',
+            url: '/WebService.asmx/GetCourses'
+        })
+            .then(function (data) {
+                var response = angular.fromJson(data);
+                $rootScope.courses = JSON.parse(response.data);
+                })
+        })
+    .controller('cfgController', function ($scope) {
+
+        $scope.message = "Hello world";
+
+    })
+   .controller('MyController', function ($scope, $http, $log, $rootScope) {
      
         $http({
             method: 'GET',
             url: '/WebService.asmx/GetAssigmnetUsersCourse'
-        })
+        }) 
             .then(function (data) {
                 var response = angular.fromJson(data);
                 $rootScope.students = JSON.parse(response.data);
@@ -58,14 +84,3 @@ angular.module('myAPP', [])
         }, true);
     })
 
-    .controller('MyController2', function ($scope, $http, $log, $rootScope) {
-        $http({
-            method: 'GET',
-            url: '/WebService.asmx/GetAllTheUsers'
-        })
-            .then(function (response) {
-                $rootScope.Users = response.data;
-                $log.info(response);
-            })
-        alert("pppp");
-    });
