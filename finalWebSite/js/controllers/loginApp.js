@@ -24,14 +24,17 @@ var app = angular.module('myAPP', ['ngRoute']);
                   headers: { "Content-Type": "application/json" }
               });
               post.success(function (data, status) {
-                  alert(data.d);
-                  $scope.status = data.d;
-                  if (data.d==true)
-                      location.href = "default.aspx"
+                  var json = JSON.parse(JSON.parse(data.d));
+                  $scope.status = json.flag;
+                  localStorage.setItem("user", data.d);
+                  location.href = "default.aspx";
+
               });
               post.error(function (data, status) {
                   $window.alert(data.Message);
+                  
               });
+             
           }
       })
 
@@ -46,7 +49,6 @@ var app = angular.module('myAPP', ['ngRoute']);
             });
 
             post.success(function (data, status) {
-                $window.alert(data.d);
             });
 
             post.error(function (data, status) {
@@ -72,5 +74,4 @@ var app = angular.module('myAPP', ['ngRoute']);
                 $rootScope.Users = response.data;
                 $log.info(response);
             })
-        alert("pppp");
     });

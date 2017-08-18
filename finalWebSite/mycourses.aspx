@@ -21,6 +21,7 @@
                             <li class="active">
                                 <i class="fa fa-desktop"></i> My Courses
                             </li>
+
                         </ol>
                     </div>
                 </div>
@@ -33,8 +34,8 @@
                               <a href="#Assignment?id={{roll.CourseID}}&course={{roll.CourseName}}">  <h3 class="panel-title">{{roll.CourseName}}-{{roll.CourseID}}</h3></a>
                             </div>
                             <div class="panel-body">
-                                Teacher name : {{roll.TeacherId}}
                             </div>
+                      <li><a href="#/showStudentsInCourse?courseId={{roll.CourseID}}"><i class="fa fa-fw fa-edit"></i> show students </a>     </li>
                         </div>
             </div>
 </body>

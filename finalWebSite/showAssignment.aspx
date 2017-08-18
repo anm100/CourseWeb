@@ -15,12 +15,17 @@
                             <li class="active">
                                 <i class="fa fa-desktop"></i>  {{courseName}}
                             </li>
+
+                   
                         </ol>
+                                 <div style="float:Left;padding-left:50px; padding-bottom:30px;font-size:15px" id="showteacher" class="hidden">
+                        <a href="#/AddAssignment"><i class="fa fa-fw fa-edit"></i> add Assigment </a>
+                    </div>
+                                
+
                     </div>
                 </div>
-                      <li>
-                        <a href="#/AddAssignment"><i class="fa fa-fw fa-edit"></i> add assigment </a>
-                    </li>
+              
         <div class="row">
                   <div class="panel panel-info col-md-6 col-xs-12 col-sm-6">
                             <div class="panel-heading">
@@ -45,5 +50,11 @@
                         </div>
     
                 </div>
-                       
+           <script>
+               var json = JSON.parse(JSON.parse(localStorage.getItem("user")));
+               if (json.Role == 'Teacher') {
+                   $("#showteacher").removeClass("hidden");
+                
+               }
+           </script>            
                            

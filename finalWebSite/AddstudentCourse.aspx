@@ -15,23 +15,26 @@
                         </ol>
                     </div>
                 </div>
+<form class="form-signin" name="loginForm">       
+  <div>
 <div class="row">
-     <Label ID="Label2" class="col-xs-12" runat="server" Text="Label"> Student id :</Label>
-      <div runat="server" class="col-xs-6" style="padding-bottom:10px;">
-        <input  ID="tbCourseID" runat="server" Class="form-control" ng-model="courseNameAssig" placeholder="ID 9 numbers">
-      </div>
+     <Label ID="Label2" class="col-xs-6" runat="server" Text="Label"> Student id :</Label>
+           <div class="form-group" ng-class="{'has-error': loginForm.userid.$invalid && loginForm.userid.$dirty, 'has-success': loginForm.userid.$valid }">
+            <input type="text" pattern="[0-9]{9}"class="form-control" placeholder="ID" name="userid" ng-model="studentIdCourse" ng-minLength="9" required/>
+            <p class="alert alert-danger" ng-if="loginForm.userid.$invalid && loginForm.userid.$dirty">enter 9 numbers</p>
+          </div>
 </div>
-<div class="row">
-          <label class="col-xs-11">choose course :</label>
-                <div class="col-xs-11">
-                 <div>
-                        <select ng-model="selectedCourse" 
-                                ng-options="product as product.label for product in products">           
-                        </select>
-                     </div>
-                        </div  >
-         
-    </div>
+
+<div style="padding-bottom:30px;" class="row">
+    <label class="col-md-2 col-xs-12" for="repeatSelect"> Choose course : </label>
+    <select class="col-md-8 col-xs-12" name="repeatSelect" id="repeatSelect" ng-model="courseList.model">
+      <option ng-repeat="option in courseList.availableOptions" value="{{option.CourseID}}">{{option.CourseName}}-{{option.CourseID}}</option>
+    </select>
+ </div>
+    
+         <Button type="submit" class="btn btn-lg btn-primary btn-block" ID="addCourse" runat="server"  ng-disabled="loginForm.$invalid" ng-click="AddStudentCourse()()"> add student </Button>
+     </div>
 
 
-<div class="row" style="padding-top:30px;padding-left:30px;">    <Button class="btn-primary" ID="addCourse" runat="server"  ng-click="AddAssign()"> add assignment </Button></div>
+    
+

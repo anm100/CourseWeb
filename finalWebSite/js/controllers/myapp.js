@@ -4,7 +4,7 @@ app.config(function ($routeProvider) {
 
     $routeProvider
         .when('/', {
-            templateUrl: 'mycourses.aspx'
+            templateUrl: 'home.aspx'
         })
         .when('/logout', {
             templateUrl: 'Logout.aspx'        
@@ -27,10 +27,16 @@ app.config(function ($routeProvider) {
         }).when('/EditUser', {
             templateUrl: 'EditUser1.aspx',
             controller:'getUsers'
+        }).when('/deleteUser', {
+            templateUrl: 'DeleteUser.aspx',
+            controller: 'userController'
         }).when('/AddAssignment', {
             templateUrl: 'addNewAssignment.aspx',
             controller: 'addAssignmentController'
             
+        }).when('/showStudentsInCourse', {
+            templateUrl: 'studentInCourseaspx.aspx',
+            controller: 'showStudentInCourseController'
         }).when('/DeleteAssignment', {
             templateUrl: 'Regist.aspx'
         }).when('/AddCourse', {
@@ -39,13 +45,22 @@ app.config(function ($routeProvider) {
         }).when('/DeleteCourse', {
             templateUrl: 'Regist.aspx'
         }).when('/AddStudentToCourse', {
-            templateUrl: 'Regist.aspx',
+            templateUrl: 'AddstudentCourse.aspx',
             controller:'courseController'
 
         });
 
 
-}).controller('userController', function ($scope, $http, $log, $rootScope) {
+}).controller('ControllerHome', function ($scope, $http, $log, $rootScope, $window) {
+    var json = JSON.parse(JSON.parse(localStorage.getItem("user")));
+    $scope.Username = json.name;
+    $scope.myrole = json.Role;
+    $scope.menulist = json.menu;
+    $("#menulist").append(json.menu);
+  
+
+})
+    .controller('userController', function ($scope, $http, $log, $rootScope) {
     $scope.products = [{
         value: '1',
         label: 'admin'
@@ -66,8 +81,6 @@ app.config(function ($routeProvider) {
             Password: $scope.Password,
             Role: $scope.seletedRole.value
         }
-        alert($scope.data1.userID);
-        alert($scope.data1.Role);
 
         var post = $http({
             method: "POST",
@@ -77,7 +90,6 @@ app.config(function ($routeProvider) {
             headers: { "Content-Type": "application/json" }
         });
         post.success(function (data, status) {
-            $window.alert(data.d);
         });
 
         post.error(function (data, status) {
@@ -85,7 +97,6 @@ app.config(function ($routeProvider) {
         });
     }
     $scope.deleteUser = function () {
-        alert($scope.userid);
         var post = $http({
             method: "POST",
             url: "/WebService.asmx/DeleteUsere",
@@ -94,7 +105,6 @@ app.config(function ($routeProvider) {
             headers: { "Content-Type": "application/json" }
         });
         post.success(function (data, status) {
-            $window.alert(data.Message);
         });
 
         post.error(function (data, status) {
@@ -110,7 +120,6 @@ app.config(function ($routeProvider) {
             .then(function (data) {
                 var response = angular.fromJson(data);
                 $rootScope.students = JSON.parse(response.data);
-                alert(response.data);
             })
     })
 
@@ -139,7 +148,7 @@ app.config(function ($routeProvider) {
 
     })
     .controller('editUsers', function ($scope, $rootScope, $http) {
-        alert("editUsersController");
+      //  alert("editUsersController");
         $scope.save = function () {
             $scope.data1 = {
                 UserId: $scope.selectedPerson.UserId,
@@ -149,7 +158,7 @@ app.config(function ($routeProvider) {
                 Password: $scope.selectedPerson.Password,
                 Role: $scope.selectedPerson.seletedRole
             }
-            alert($scope.data1.userId);
+       //     alert($scope.data1.userId);
             var post = $http({
                 method: "POST",
                 url: "/WebService.asmx/EditUser",
@@ -158,7 +167,7 @@ app.config(function ($routeProvider) {
                 headers: { "Content-Type": "application/json" }
             });
             post.success(function (data, status) {
-                $window.alert(data.d);
+            //    $window.alert(data.d);
             });
 
             post.error(function (data, status) {
@@ -167,16 +176,47 @@ app.config(function ($routeProvider) {
         }
     })
     .controller('courseController', function ($scope, $http, $log, $rootScope) {
+        
 
-    $http({
-        method: 'GET',
-        url: '/WebService.asmx/GetCourses'
-    })
-        .then(function (data) {
-            var response = angular.fromJson(data);
-            $rootScope.courses = JSON.parse(response.data);
-            alert(response.data);
+        $http({
+            method: 'GET',
+            url: '/WebService.asmx/GetCourses'
         })
+            .then(function (data) {
+                var response = angular.fromJson(data);
+                $rootScope.courses = JSON.parse(response.data);
+                selectopttion = {
+                    model: null,
+                    availableOptions: $rootScope.courses.json
+
+                };
+                $scope.courseList = selectopttion;
+            });
+        $scope.AddStudentCourse = function () {
+            
+            $scope.data = {
+                UserId: $scope.studentIdCourse,
+                CourseId: $scope.courseList.model
+               
+        
+            }
+            var post = $http({
+                method: "POST",
+                url: "/WebService.asmx/addStudentCourse",
+                dataType: 'json',
+                data: { newStudent: $scope.data },
+                headers: { "Content-Type": "application/json" }
+            });
+            post.success(function (data, status) {
+              // alert(data.d);
+               // location.href = "#Assignment?id=" + $rootScope.courseid;
+            });
+
+            post.error(function (data, status) {
+                $window.alert(data.Message);
+            });
+        }
+    
     })
     .controller('addCourseController', function ($scope, $http, $log, $rootScope, $window) {
         $scope.AddCourse = function () {
@@ -193,7 +233,7 @@ app.config(function ($routeProvider) {
                 headers: { "Content-Type": "application/json" }
             });
             post.success(function (data, status) {
-                $window.alert(data.Message);
+            //    $window.alert(data.Message);
             });
 
             post.error(function (data, status) {
@@ -211,7 +251,7 @@ app.config(function ($routeProvider) {
        
         }];
         $scope.AddAssign = function () {
-            alert($scope.selectedtype.value);
+            //alert($scope.selectedtype.value);
             $scope.data = {
                 CourseId: $rootScope.courseid,
                 AssignmentName: $scope.courseNameAssig,
@@ -226,7 +266,7 @@ app.config(function ($routeProvider) {
                 headers: { "Content-Type": "application/json" }
             });
             post.success(function (data, status) {
-                $window.alert(data.d);
+              //  $window.alert(data.d);
                 location.href = "#Assignment?id=" + $rootScope.courseid;
             });
 
@@ -234,32 +274,31 @@ app.config(function ($routeProvider) {
                 $window.alert(data.Message);
             });
         }
-    }).controller('addstudentController', function ($location, $scope, $http, $log, $rootScope, $window) {
-        $scope.products = $rootScope.courses;
-        $scope.AddAssign = function () {
-            alert($scope.selectedtype.value);
-            $scope.data = {
-                CourseId: $rootScope.courseid,
-                AssignmentName: $scope.courseNameAssig,
-                SubDate: $scope.assignmentdate,
-                Type: $scope.selectedtype.value
-            }
-            var post = $http({
-                method: "POST",
-                url: "/WebService.asmx/addAssignment",
-                dataType: 'json',
-                data: { newAssign: $scope.data },
-                headers: { "Content-Type": "application/json" }
-            });
-            post.success(function (data, status) {
-                $window.alert(data.d);
-                location.href = "#Assignment?id=" + $rootScope.courseid;
-            });
+    })
+   
+    .controller('showStudentInCourseController', function ($scope, $location, $http, $log, $rootScope, $window) {
+        //alert($location.search().courseId);
+        $rootScope.courseid = ($location.search().courseId);
+       // alert("aaaa")
+        var post = $http({
+            method: "POST",
+            url: "/WebService.asmx/studentsInCourse",
+            dataType: 'json',
+            data: JSON.stringify({ CourseID: $location.search().courseId }),
+            headers: { "Content-Type": "application/json" }
+        });
+        post.success(function (data, status) {
+         //   $window.alert(data.d);
+            $scope.userInCourse = data.d;
+        //    $window.alert(JSON.parse(data.d));
+            $scope.userInCourse = JSON.parse(JSON.parse(data.d));
+         //   $window.alert(userInCourse.json);
+        });
 
-            post.error(function (data, status) {
-                $window.alert(data.Message);
-            });
-        }
+        post.error(function (data, status) {
+            $window.alert(data.Message);
+        });
+
     })
     .controller('AssignmentController', function ($scope, $location, $http, $log, $rootScope, $window) {
         $scope.sidCourse = $location.search().id;
@@ -285,9 +324,9 @@ app.config(function ($routeProvider) {
         });
 
     }).controller('myGradeController', function ($scope, $location, $http, $log, $rootScope, $window) {
-        alert($location.search().name);
-        alert($rootScope.courseid);
-        alert("aaaa")
+       // alert($location.search().name);
+       // alert($rootScope.courseid);
+       // alert("aaaa")
         var post = $http({
             method: "POST",
             url: "/WebService.asmx/getStudenAssignment",
@@ -297,11 +336,11 @@ app.config(function ($routeProvider) {
         });
         $rootScope.courseid = ($location.search().id);
         post.success(function (data, status) {
-            $window.alert(data.d);
+            //$window.alert(data.d);
             $scope.grade = data.d;
-            $window.alert($scope.grade);
+          //  $window.alert($scope.grade);
             $scope.grade = JSON.parse(JSON.parse(data.d));
-            $window.alert($scope.grade.json);
+        //    $window.alert($scope.grade.json);
 
         });
 
@@ -348,10 +387,10 @@ app.config(function ($routeProvider) {
         //        $rootScope.students = JSON.parse(response.data);
         //        alert(response.data);
         //    })
-        alert($location.search().name);
-        alert($rootScope.courseid);
+      //  alert($location.search().name);
+     //   alert($rootScope.courseid);
         $rootScope.assignmentId = $location.search().name;
-        alert("aaaa")
+      //  alert("aaaa")
         var post = $http({
             method: "POST",
             url: "/WebService.asmx/GetAssigmnetUsersCourse",
@@ -361,11 +400,11 @@ app.config(function ($routeProvider) {
         });
         $rootScope.courseid = ($location.search().id);
         post.success(function (data, status) {
-            $window.alert(data.d);
+           // $window.alert(data.d);
             $scope.grade = data.d;
-            $window.alert($scope.grade);
+        //    $window.alert($scope.grade);
             $scope.grade = JSON.parse(JSON.parse(data.d));
-            $window.alert($scope.grade.json);
+        //    $window.alert($scope.grade.json);
 
         });
 
@@ -396,7 +435,7 @@ app.config(function ($routeProvider) {
             });
 
             post.success(function (data, status) {
-                $window.alert(data.d);
+               // $window.alert(data.d);
             });
 
             post.error(function (data, status) {

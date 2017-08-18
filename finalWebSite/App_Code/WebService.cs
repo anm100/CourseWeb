@@ -153,8 +153,8 @@ public class WebService : System.Web.Services.WebService
             }
             else
                 cmd.CommandText = "SELECT v1.UserId,v2.AssignmentName,v1.Grade" +
-                 "FROM[courseExample].[dbo].[grades] as v1,[courseExample].[dbo].[assignment] as v2" +
-                   "where v1.AssignmentId=" + assignmentId + "AND v2.AssignmentId=" + assignmentId;
+                 " FROM[courseExample].[dbo].[grades] as v1,[courseExample].[dbo].[assignment] as v2" +
+                   " where v1.AssignmentId=" + assignmentId + "AND v2.AssignmentId=" + assignmentId;
             try
             {
                 context.Database.Connection.Open();
@@ -269,6 +269,13 @@ public class WebService : System.Web.Services.WebService
                 }
                 JObject o = new JObject();
                 o["json"] = array;
+                if (user.Role == 1 || user.Role == 2)
+                {
+                    o["showstudent"] = "<li><a href=\"#/showStudentsInCourse?courseId={{roll.CourseID}}\"><i class=\"fa fa-fw fa-edit\"></i> show students </a> </li>";
+                }else
+                {
+                    o["showstudent"]="";
+                }
                 string json = o.ToString();
                 // {
                 //   "MyArray": [
@@ -290,12 +297,63 @@ public class WebService : System.Web.Services.WebService
             }
         }
     }
-    [WebMethod(EnableSession = true)]
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public string studentsInCourse(string CourseID)
+    {
+        int CourseId = Convert.ToInt32(CourseID);
+        JavaScriptSerializer js;
+        string json;
+        int courseId = Convert.ToInt32(CourseID);
+        using (var context = new courseExampleEntities())
+        {
+            // creates a Command 
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "SELECT  v2.FirstName ,v2.Lastname,v2.UserId"
+            + " FROM[courseExample].[dbo].[enrolled] as v1 ,  [courseExample].[dbo].[Users] as v2" +
+             " where v1.UserId=v2.UserId AND v1.CourseId=" + courseId;
+            try
+            {
+                context.Database.Connection.Open();
+                var reader = cmd.ExecuteReader();
+                JArray array1 = new JArray();
+                // loop through all resultsets (considering that it's possible to have more than one)
+                while (reader.Read())
+                {
+                    JObject data = new JObject();
+                    data["FirstName"] = (reader["FirstName"]).ToString();
+                    data["Lastname"] = (reader["Lastname"]).ToString();
+                    data["UserId"] = Convert.ToInt32(reader["UserId"]);
+                    array1.Add(data);
+                }
+                JObject o = new JObject();
+                o["json"] = array1;
+                json = o.ToString();
+                js = new JavaScriptSerializer();
+                Context.Response.Clear();
+            }
+
+            finally
+            {
+                context.Database.Connection.Close();
+            }
+
+        }
+        return (js.Serialize(json));
+    }
+
+
+
+
+
+[WebMethod(EnableSession = true)]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public Boolean EditGrades(string name, string assignmentId)
     {
         JObject data = JObject.Parse(name);
         JArray array = (JArray)data["json"];
+       
         int CourseID;
 
 
@@ -334,9 +392,12 @@ public class WebService : System.Web.Services.WebService
     }
     [WebMethod(EnableSession = true)]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-    public Boolean validateUser(string id, string pass)
+    public string validateUser(string id, string pass)
     {
         Boolean flag = false;//not exist
+        string json;
+        JavaScriptSerializer js;
+        string result; 
         using (var context = new courseExampleEntities())
         {
             // creates a Command 
@@ -345,6 +406,8 @@ public class WebService : System.Web.Services.WebService
             cmd.CommandText = "SELECT  * from courseExample.dbo.Users where UserId=" + "'" + Convert.ToInt32(id) + "' AND Password='" + pass + "';";
             try
             {
+                JObject data = new JObject();
+
                 context.Database.Connection.Open();
                 var reader = cmd.ExecuteReader();
                 if (reader.HasRows)
@@ -359,24 +422,54 @@ public class WebService : System.Web.Services.WebService
                     user.Password = (reader["Password"]).ToString();
                     user.Role = Convert.ToInt32(reader["Role"]);
                     Session["user"] = user;
+                    data["path"] = "default.aspx";
 
+                    data["name"] = (reader["FirstName"]).ToString() + " " + (reader["LastName"]).ToString();
+                    data["Email"] = (reader["Email"]).ToString();
+                    if (Convert.ToInt32((reader["Role"])) == 1)
+                    {
+                        data["Role"] = "Admin";
+                        data["menu"] = " <li> <a href = \"#/adduser\" ><i class=\"fa fa-fw fa-edit\"></i> add user</a></li>"
+                     +"<li><a href = \"#/EditUser\" ><i class=\"fa fa-fw fa-edit\"></i> edit users</a>   </li> <li> <a href = \"#/deleteUser\" ><i class=\"fa fa-fw fa-edit\"></i> delete user</a>"
+                    +"</li>   <li> <a href = \"#/AddStudentToCourse\" ><i class=\"fa fa-fw fa-edit\"></i> add student to course</a> </li> ";
+
+                        data["menu1"] = "";
+                    }
+                    else if (Convert.ToInt32((reader["Role"])) == 2)
+                    {
+                        data["Role"] = "Teacher";
+                        data["menu"]= "<li>  <a href = \"#/AddCourse\" ><i class=\"fa fa-fw fa-edit\"></i> add course</a></li><li> <a href = \"#/AddStudentToCourse\" ><i class=\"fa fa-fw fa-edit\"></i> add student to course</a> </li>";
+                        data["menu1"] = "";
+                    }
+                    else
+                    {
+                        data["Role"] = "Student";
+                        data["menu"] = ""; 
+                    }
+          
                 }
 
+                json = data.ToString();
+                if (flag == false)
+                {
+                    data["flag"] = false;
+                }else
+                {
+                    data["flag"] = true;
+                }
+                js = new JavaScriptSerializer();
+                result = js.Serialize(json);
+                Context.Response.Clear();
             }
             finally
             {
                 context.Database.Connection.Close();
-
+             
             }
         }
-        if (flag == true)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        
+        return js.Serialize(json);
+
     }
 
     [WebMethod]
@@ -522,7 +615,7 @@ public class WebService : System.Web.Services.WebService
                 "FROM [courseExample].[dbo].[assignment] as v1 , [courseExample].[dbo].[enrolled]as v2"
                 + " where v1.CourseID=" + courseId + "AND v1.CourseID=v2.CourseID AND v2.UserID=" + user.UserId;
 
-            if (user.Role == 2)
+            if (user.Role == 2 || user.Role == 1)
                 cmd.CommandText = "SELECT AssignmentId,AssignmentName,Type FROM[courseExample].[dbo].[assignment] where CourseID =" + int.Parse(CourseID);
             try
             {
@@ -606,4 +699,19 @@ public class WebService : System.Web.Services.WebService
         context.Database.Connection.Close();
         return "The user have been added successfully - not complited";
     }
+
+    [WebMethod]
+[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+public string addStudentCourse(enrolled newStudent)
+{
+    int courseId = newStudent.CourseId;
+    int userID = newStudent.UserId;
+    var context = new courseExampleEntities();
+    var cmd = context.Database.Connection.CreateCommand();
+        cmd.CommandText = "INSERT INTO  enrolled(UserId, CourseId) values(" + userID + "," + courseId + ')';
+    context.Database.Connection.Open();
+    var reader = cmd.ExecuteReader();
+    context.Database.Connection.Close();
+    return "The student added successfully ";
+}
 }

@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" CodeFile="gradesLab.aspx.cs" Inherits="gradesLab" %>
-    <script src="js/jquery-3.1.0.min.js"></script>
+<%--    <script src="js/jquery-3.1.0.min.js"></script>
     <script>
 
         function EditMode(el, isEdit) {
@@ -14,11 +14,11 @@
                 $(el).prev().show();
             }
         }
-    </script>
+    </script>--%>
       <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            {assigment name}
+                           Edit grades
                         </h1>
                         <ol class="breadcrumb">
                             <li>
@@ -27,11 +27,9 @@
                              <li>
                                 <i class="fa fa-desktop"></i>  <a href="#/Courses">My Courses</a>
                             </li>
-                                                         <li>
-                                <i class="fa fa-desktop"></i>  <a href="#/Courses">{course name}</a>
-                            </li>
+
                             <li class="active">
-                                <i class="fa fa-form"></i>    {assigment name}
+                                <i class="fa fa-form"></i> Edit grades
                             </li>
                         </ol>
                     </div>
@@ -58,6 +56,13 @@
                                 Student ID
                                 <span runat="server" ng-show="sortType == 'ID' && !sortReverse" class="fa fa-caret-down"></span>
                                 <span runat="server" ng-show="sortType == 'ID' && sortReverse" class="fa fa-caret-up"></span>
+                            </a>
+                        </td>
+                          <td>
+                            <a runat="server"  ng-click="sortType = 'grade'; sortReverse = !sortReverse">
+                               Assignment name: 
+                                <span runat="server" ng-show="sortType == 'grade' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span runat="server" ng-show="sortType == 'grade' && sortReverse" class="fa fa-caret-up"></span>
                             </a>
                         </td>
                         <td>
